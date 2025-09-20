@@ -52,8 +52,8 @@ const AIPopup: React.FC<AIPopupProps> = ({
       className="ai-popup"
       style={{
         position: "absolute",
-        left: popup.x,
-        top: popup.y,
+        left: position.left,
+        top: position.top,
         zIndex: 1000,
         background: "#fff",
         boxShadow: "0 2px 12px rgba(0,0,0,0.15)",

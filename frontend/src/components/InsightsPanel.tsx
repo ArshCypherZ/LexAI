@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../styles/SummaryCard.css";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';

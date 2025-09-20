@@ -6,7 +6,7 @@ interface DocumentContentProps {
 }
 
 const DocumentContent: React.FC<DocumentContentProps> = ({ docText, onTextSelect }) => {
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseUp = () => {
     const selection = window.getSelection();
     if (selection && selection.toString().trim()) {
       const range = selection.getRangeAt(0);

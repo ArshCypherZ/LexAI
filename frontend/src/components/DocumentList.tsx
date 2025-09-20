@@ -4,13 +4,11 @@ import "../styles/SummarizerPage.css";
 import "../styles/DocumentList.css";
 
 interface DocumentListProps {
-  onAddDoc: () => void;
   selectedDocIndex?: number;
   onSelectDoc?: (index: number) => void;
 }
 
 const DocumentList: React.FC<DocumentListProps> = ({ 
-  onAddDoc, 
   selectedDocIndex = 0, 
   onSelectDoc 
 }) => {

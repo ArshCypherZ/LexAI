@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -14,7 +14,6 @@ interface AISidebarProps {
   onClose: () => void;
   docChunks?: string[];
   docMessages: Array<{ role: "user" | "ai" | "thinking"; content: string }>;
-  fileHashes?: string[];
   setDocMessages: React.Dispatch<
     React.SetStateAction<Array<{ role: "user" | "ai" | "thinking"; content: string }>>
   >;
@@ -36,7 +35,6 @@ const AISidebar: React.FC<AISidebarProps> = ({
   docChunks,
   docMessages,
   setDocMessages,
-  fileHashes = [], // Default to empty array
 }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [convMessages, setConvMessages] = React.useState<
@@ -46,108 +44,10 @@ const AISidebar: React.FC<AISidebarProps> = ({
   const [newChatActive, setNewChatActive] = React.useState<boolean>(false);
   const [sessionId, setSessionId] = useState(() => uuidv4());
   
-  // Summary-related state
-  const [summaries, setSummaries] = React.useState<Record<string, string>>({});
-  const [summaryStatus, setSummaryStatus] = React.useState<Record<string, boolean>>({});
-  const [summaryLoading, setSummaryLoading] = React.useState(false);
-  const [debugInfo, setDebugInfo] = React.useState<string>("");
-  
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { addFile, selectedFiles } = useFile();
+  const { addFile } = useFile();
 
   if (!open) return null;
-
-  // Effect to fetch summaries when fileHashes change
-  useEffect(() => {
-    
-    const hashesToUse = fileHashes.length > 0 ? fileHashes : selectedFiles.map(f => f.fileHash);
-    
-    setDebugInfo(`Using hashes: ${JSON.stringify(hashesToUse)}`);
-    
-    if (!hashesToUse || hashesToUse.length === 0) {
-      console.log("No file hashes to process");
-      setSummaries({});
-      setSummaryStatus({});
-      setDebugInfo("No file hashes available");
-      return;
-    }
-
-    let cancelled = false;
-
-    const fetchSummaries = async () => {
-      setSummaryLoading(true);
-      setDebugInfo(`Fetching summaries for: ${hashesToUse.join(', ')}`);
-      
-      try {
-        // Check summary status for all fileHashes
-        const statusRes = await fetch(`${BASE_URL}/summary/status`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(hashesToUse),
-        });
-        
-        
-        if (!statusRes.ok) {
-          console.warn('Status check failed:', statusRes.status);
-          setDebugInfo(`Status check failed: ${statusRes.status}`);
-          return;
-        }
-        
-        const statusJson = await statusRes.json();
-        
-        if (!cancelled) setSummaryStatus(statusJson.status || {});
-
-        // Fetch summaries for files that are ready
-        const summariesData: Record<string, string> = {};
-        
-        for (const fileHash of hashesToUse) {
-          
-          if (statusJson.status && statusJson.status[fileHash]) {
-            try {
-              const sumRes = await fetch(`${BASE_URL}/summary`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ fileHash }),
-              });
-              
-              
-              if (sumRes.ok) {
-                const sumJson = await sumRes.json();
-                summariesData[fileHash] = sumJson.summary || "No summary available";
-              } else {
-                summariesData[fileHash] = "Summary not ready";
-              }
-            } catch (err) {
-              console.error('Error fetching summary for', fileHash, err);
-              summariesData[fileHash] = "Error loading summary";
-            }
-          } else {
-            summariesData[fileHash] = "Processing...";
-          }
-        }
-
-        if (!cancelled) {
-          setSummaries(summariesData);
-          setDebugInfo(`Loaded ${Object.keys(summariesData).length} summaries`);
-        }
-      } catch (err: any) {
-        console.error("Error fetching summaries:", err);
-        setDebugInfo(`Error: ${err.message}`);
-      } finally {
-        if (!cancelled) setSummaryLoading(false);
-      }
-    };
-
-    fetchSummaries();
-    
-    // Poll for updates every 5 seconds
-    const interval = setInterval(fetchSummaries, 5000);
-
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, [fileHashes, selectedFiles]);
 
   const messages = conversationMode ? convMessages : docMessages;
   const setMessages = conversationMode ? setConvMessages : setDocMessages;
@@ -258,8 +158,6 @@ const AISidebar: React.FC<AISidebarProps> = ({
       addFile(fileMeta);
     }
   };
-
-  const hashesToDisplay = fileHashes.length > 0 ? fileHashes : selectedFiles.map(f => f.fileHash);
 
   return (
     <div

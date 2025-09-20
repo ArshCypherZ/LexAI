@@ -134,7 +134,6 @@ const SummarizerPage: React.FC = () => {
   const handleSelectDoc = (index: number) => {
     setSelectedDocIndex(index);
     if (selectedFiles[index]?.summary) {
-      const selectedFile = selectedFiles[index];
       setDocText(selectedFiles[index]?.summary?.text || "No content available");
       setDocChunks(selectedFiles[index]?.summary?.chunks || []);
     }
@@ -230,7 +229,6 @@ const SummarizerPage: React.FC = () => {
         <div className="summarizer-main">
           {/* Left: Document List - NO KEY PROP */}
           <DocumentList 
-            onAddDoc={handleAddDocClick}
             selectedDocIndex={selectedDocIndex}
             onSelectDoc={handleSelectDoc}
           />
@@ -286,7 +284,6 @@ const SummarizerPage: React.FC = () => {
               docChunks={docChunks}
               docMessages={docMessages}
               setDocMessages={setDocMessages}
-              fileHashes={selectedFiles.map((f: any) => f.fileHash || "")}
             />
           )}
         </div>
