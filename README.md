@@ -17,8 +17,8 @@ LexAI/
 └── README.md   → Main project overview
 ```
 
-* [Frontend README](./frontend/README.md)
-* [Backend README](./backend/README.md)
+* [Frontend README](./frontend/readme.md)
+* [Backend README](./backend/readme.md)
 
 ---
 
