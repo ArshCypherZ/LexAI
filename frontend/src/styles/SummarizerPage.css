@@ -1,0 +1,142 @@
+/* Main Layout Fixes */
+.summarizer-bg {
+  background-color: #500b99 !important;
+  min-height: 100vh;
+}
+
+.summarizer-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.summarizer-header {
+  background: white;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.summarizer-main {
+  flex: 1;
+  display: flex;
+  background-color: #f8f9fa;
+}
+
+/* Left Documents Panel - Increased width and proper positioning */
+.documents-panel {
+  width: 300px; /* Increased from 280px */
+  min-width: 300px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e5e7eb;
+}
+
+/* Center Document Content - Adjust for new sidebar widths */
+.document-content {
+  flex: 1;
+  padding: 16px;
+  background: white;
+  margin: 16px;
+  margin-right: 8px; /* Reduced right margin */
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  overflow-y: auto;
+}
+
+/* Right Document Insights Panel - Increased width */
+.document-insights-panel {
+  width: 350px; /* Increased from 320px */
+  min-width: 350px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 80px); /* Account for header */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-left: 1px solid #e5e7eb;
+}
+
+/* Button Styles */
+.chat-btn, .export-btn, .add-document-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+}
+
+.chat-btn, .add-document-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.chat-btn:hover, .add-document-btn:hover {
+  background-color: #2563eb;
+}
+
+.export-btn {
+  background-color: #10b981;
+  color: white;
+}
+
+.export-btn:hover {
+  background-color: #059669;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .documents-panel {
+    width: 280px;
+    min-width: 280px;
+  }
+  
+  .document-insights-panel {
+    width: 320px;
+    min-width: 320px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .documents-panel {
+    width: 250px;
+    min-width: 250px;
+  }
+  
+  .document-insights-panel {
+    width: 300px;
+    min-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .summarizer-main {
+    flex-direction: column;
+  }
+  
+  .documents-panel,
+  .document-insights-panel {
+    width: 100%;
+    min-width: unset;
+    min-height: auto;
+  }
+  
+  .document-content {
+    margin: 8px;
+  }
+}
